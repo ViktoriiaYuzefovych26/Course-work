@@ -1,0 +1,21 @@
+/* "Скляний" ефект для карток (з твого дизайну) */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Стилізація колії */
+.track-line {
+  height: 10px;
+  background: repeating-linear-gradient(90deg, #ccc, #ccc 10px, #fff 10px, #fff 20px);
+}
+
+/* Стилізація вагона */
+.wagon {
+  width: 40px;
+  height: 30px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}

@@ -1,0 +1,47 @@
+<div class="container py-4 sorting-page">
+  <div class="row g-4">
+    <div class="col-12 col-lg-6">
+      <div class="card h-100 shadow-sm border-0 rounded-3 p-3 glass-card">
+        <h3 class="mb-4 text-center">ВХІДНИЙ ПОТЯГ</h3>
+        <p class="text-muted text-center">Всього вагонів: <span class="fw-bold">15</span></p>
+        
+        <div class="d-flex justify-content-center gap-2 mb-4">
+          <button class="btn btn-outline-primary btn-sm rounded-pill px-3">Завантажити з файлу</button>
+          <button class="btn btn-primary btn-sm rounded-pill px-3">➕ Додати вагон вручну</button>
+        </div>
+
+        <div class="track-container mb-4">
+          <div class="track-label text-muted small mb-1">Вхідна черга (max 10)</div>
+          <div class="track-line d-flex justify-content-end align-items-center bg-light rounded-pill" style="position: relative; height: 10px;">
+            <div class="wagon bg-warning p-2 text-center text-white small" style="width: 40px; height: 30px; border-radius: 5px; position: absolute; right: 0;">#1</div>
+            <div class="wagon bg-warning p-2 text-center text-white small" style="width: 40px; height: 30px; border-radius: 5px; position: absolute; right: 50px;">#2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card h-100 shadow-sm border-0 rounded-3 p-3 glass-card">
+        <h3 class="mb-4 text-center">СОРТУВАЛЬНИЙ ВУЗОЛ</h3>
+        <div class="mb-4 p-3 rounded text-center fw-bold" style="background-color: #ffca28;">
+          Вхідна колія #1
+        </div>
+
+        <div class="d-flex justify-content-center gap-2 mb-4">
+          <button class="btn btn-secondary btn-sm rounded-pill px-3">⚙️ Налаштувати</button>
+          <button class="btn btn-success btn-sm rounded-pill px-3">⚙️ Почати сортування</button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6 mb-3">
+            <div class="p-2 border rounded bg-light track-container shadow-sm">
+              <h6 class="track-label text-muted small">Колія 1 (Львів)</h6>
+              <div class="wagon bg-info p-2 text-center text-white small rounded-3 d-inline-block me-1">#1</div>
+              <div class="wagon bg-info p-2 text-center text-white small rounded-3 d-inline-block">#4</div>
+            </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
