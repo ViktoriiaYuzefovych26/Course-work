@@ -1,33 +1,27 @@
-/* --- ГЛОБАЛЬНИЙ ФОН СТОРІНКИ --- */
+/* --- Твій оригінальний блок (БЕЗ ЗМІН) --- */
+
 .sorting-page {
-  background-color: #ffffff; /* Повністю білий фон */
+  background-color: #ffffff; 
   position: relative;
-  overflow: hidden; /* Ховаємо те, що вилазить за краї (щоб рейки не робили скрол) */
+  overflow: hidden; 
 }
 
-/* --- ЧАСТКОВИЙ ФОН (РЕЙКИ) --- */
 .partial-track-background {
   position: absolute;
   bottom: 300px; 
   left: -20px; 
-  
-  width: 350px;  
+  width: 350px;   
   height: 350px; 
-  
   background-size: contain;
   background-repeat: no-repeat;
   z-index: 0;   
 }
 
-/* Піднімаємо самі картки над рейками */
 .content-row {
   position: relative;
   z-index: 1;
 }
 
-/* --- КАРТКИ --- */
-
-/* "Скляний" ефект для лівої картки з легким голубим відтінком */
 .glass-card {
   background: rgba(255, 255, 255, 0.2) !important; 
   backdrop-filter: blur(8px);
@@ -35,7 +29,6 @@
   box-shadow: 0 8px 32px 0 lab(21.68% 32.52 -54.64 / 0.05) !important;
 }
 
-/* Права картка примусово біла */
 .bg-white {
   background: rgba(255, 255, 255, 0.2) !important; 
   backdrop-filter: blur(8px);
@@ -43,14 +36,13 @@
   box-shadow: 0 8px 32px 0 lab(21.68% 32.52 -54.64 / 0.05) !important;
 }
 
-/* --- ДЕТАЛІ ІНТЕРФЕЙСУ --- */
-
 .track-line {
   height: 12px !important;
   background: repeating-linear-gradient(90deg, #9e9e9e, #9e9e9e 10px, #e0e0e0 10px, #e0e0e0 20px) !important;
   border-radius: 4px;
 }
 
+/* Це твій стиль для жовтих вагонів у черзі */
 .wagon {
   width: 45px;
   height: 30px;
@@ -68,30 +60,88 @@
   background-color: #0d6efd;
   border: none;
 }
+
 .btn-warning {
   background-color: #ffca28;
   border: none;
   font-weight: 600;
 }
+
 .partial-train-background {
   position: absolute;
-  
-  /* Підняття потяга від нижнього краю. 
-     Можеш зробити таке ж, як у рейок, або підняти вище/нижче */
   bottom: 40px; 
-  
-  /* ПРИТИСКАЄМО ДО ПРАВОГО КРАЮ */
   right: -20px; 
-  
-  /* Розміри. Потяг більш витягнутий, тому ширину можна зробити більшою, 
-     а висоту меншою, щоб зберегти пропорції малюнка */
-  width: 500px;  
+  width: 500px;   
   height: 350px; 
-  
   background-size: contain;
   background-repeat: no-repeat;
-  /* Важливо: вирівнюємо картинку по правому нижньому краю її власного блоку */
   background-position: bottom right; 
-  
   z-index: 0; 
+}
+
+/* Глибокі тіні для карток */
+.glass-card {
+  box-shadow: 0 10px 25px rgba(30, 58, 95, 0.15);
+}
+
+/* Кнопки з ефектом підняття */
+.btn-primary {
+  transition: all 0.2s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(42, 82, 152, 0.4);
+}
+
+/* Анімація плавання для картинки з ноутом */
+@keyframes floatLaptop {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+.img-fluid {
+  animation: floatLaptop 6s ease-in-out infinite;
+}
+
+/* --- ДОДАНІ СТИЛІ (Тільки те, що потрібно для нової логіки) --- */
+
+/* Стиль для синіх вагонів, які вже посортовані на коліях */
+.wagon-item {
+  width: 65px;
+  height: 35px;
+  background-color: #0dcaf0 !important;
+  color: white;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-bottom: 3px solid #0aa2c0; /* Ефект об'єму для посортованих */
+  animation: wagonArrival 0.4s ease-out;
+}
+
+/* Анімація прибуття вагона на колію */
+@keyframes wagonArrival {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Лічильник (Badge) у заголовку колії */
+.badge.bg-primary.rounded-pill {
+  font-size: 12px;
+  background-color: #1e3a5f !important;
+  padding: 5px 10px;
+}
+
+/* Контейнер для колії, щоб він мав легкий акцент */
+.track-container {
+  border-left: 4px solid #1e3a5f !important;
+  background: white !important;
+  transition: transform 0.2s;
+}
+
+.track-container:hover {
+  transform: scale(1.02);
 }

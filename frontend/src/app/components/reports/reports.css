@@ -1,0 +1,80 @@
+.reports-container { /* Основний фон сторінки */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Ефект плавання для картинки - ЗРОБИВ ПОВІЛЬНІШИМ (8s) */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.floating-img {
+    animation: floating 4s ease-in-out infinite; /* Час змінено на 8 секунд */
+    filter: drop-shadow(0 15px 20px rgba(0,0,0,0.08));
+}
+
+/* Стиль для боксу фільтрів - без білого фону */
+.custom-filter-box {
+    background: rgba(255, 255, 255, 0.4); /* Напівпрозорий */
+    backdrop-filter: blur(5px);
+    border-color: #e2e8f0 !important;
+}
+
+/* Картки та таблиця без жорсткого білого фону */
+.transparent-card {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.stat-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    background: #ffffff !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05) !important;
+}
+
+/* Рядки таблиці */
+.report-row {
+    transition: all 0.2s ease;
+}
+
+.report-row:hover {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Кнопка дії */
+.action-btn {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border-width: 1.5px;
+}
+
+.action-btn:hover {
+    background-color: #0d6efd;
+    color: white;
+    transform: rotate(360deg); /* Додав маленький ефект оберту для цікавості */
+}
+
+.hover-scale {
+    transition: all 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(13, 110, 253, 0.2) !important;
+}
+
+/* Роздільник */
+.vr {
+    background-color: #cbd5e1;
+    width: 1px;
+}

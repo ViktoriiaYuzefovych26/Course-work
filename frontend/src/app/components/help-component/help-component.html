@@ -1,0 +1,75 @@
+<div class="container py-5 help-page min-vh-100 animate__animated animate__fadeIn">
+  <div class="row justify-content-center ">
+    <div class="col-lg-10 ">
+      
+      <div class="text-center mb-5 animate__animated animate__fadeInDown">
+        <h1 class="fw-bold text-primary display-4">Довідка системи TrainSorty</h1>
+        <p class="text-muted">Інструкція з експлуатації та технічні стандарти сортування</p>
+      </div>
+
+      <div class="card shadow-sm border-0 rounded-2 p-4 mb-4 glass-card animate__animated animate__fadeInLeft">
+        <h4 class="fw-bold mb-3" style="color: #1e3a5f;">📖 Порядок роботи з програмою</h4>
+        <div class="row">
+          <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item bg-transparent"><strong>1. Налаштування:</strong> Натисніть ⚙️, щоб додати міста та типи вагонів.</li>
+              <li class="list-group-item bg-transparent"><strong>2. Введення даних:</strong> Завантажте JSON-файл або введіть 8 цифр вручну.</li>
+              <li class="list-group-item bg-transparent"><strong>3. Валідація:</strong> Система автоматично перевірить наявність колії для вашого номера.</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item bg-transparent"><strong>4. Сортування:</strong> Натисніть 🚀 для автоматичного розподілу.</li>
+              <li class="list-group-item bg-transparent"><strong>5. Звітність:</strong> Після завершення сформуйте файл звіту для архіву.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 rounded-4 p-4 mb-4 bg-white animate__animated animate__fadeInRight">
+        <h4 class="fw-bold mb-3" style="color: #1e3a5f;">🔢 Розпізнавання номерів вагонів (УЗ)</h4>
+        <p class="small text-muted">Тип вагона визначається за першою цифрою восьмизначного номера:</p>
+        
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 20%">Перша цифра</th>
+                <th>Рід рухомого складу</th>
+                <th>Опис для системи</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge bg-primary fs-6">0, 1</span></td>
+                <td><strong>Пасажирські</strong></td>
+                <td>Вагони для перевезення пасажирів та багажу.</td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-warning text-dark fs-6">2, 3, 5, 6</span></td>
+                <td><strong>Вантажні</strong></td>
+                <td>Криті вагони, платформи та власні вагони підприємств.</td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-info fs-6">7</span></td>
+                <td><strong>Цистерни</strong></td>
+                <td>Спеціалізовані вагони для рідких вантажів.</td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-success fs-6">4</span></td>
+                <td><strong>Контейнерні</strong></td>
+                <td>Платформи для перевезення великотоннажних контейнерів.</td>
+              </tr>
+              <tr>
+                <td><span class="badge bg-secondary fs-6">8, 9</span></td>
+                <td><strong>Технічні</strong></td>
+                <td>Рефрижератори, колійні машини та снігоочисники.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
