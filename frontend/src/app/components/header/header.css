@@ -1,4 +1,46 @@
-.nav-link.active {
-  font-weight: bold;
-  color: #0d6efd !important; /* Синій колір для активного пункту */
+/* 1. Імпортуємо твої шрифти з Figma */
+@import url('https://fonts.googleapis.com/css2?family=Alumni+Sans+Collegiate+One&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap');
+
+/* 2. Стиль для логотипу */
+.logo-text {
+  font-family: 'Alumni Sans Collegiate One', sans-serif;
+  color: #02007D;
+  font-size: 35px;
+  line-height: 1;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+/* 1. Базовий стиль для всіх посилань */
+.nav-link {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  color: black !important; 
+  font-size: 18px;
+  font-weight: 500;
+  padding: 8px 16px !important;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* Анімація тут */
+  background-color: transparent; /* Початковий фон прозорий */
+}
+
+/* 2. Анімація ПРИ НАВЕДЕННІ (hover) */
+/* Додаємо :not(.active), щоб ефект наведення не ламав вигляд вже активної кнопки */
+.navbar-nav .nav-link:not(.active):hover {
+  color: #1e3a5f !important; 
+  background-color: rgba(32, 120, 202, 0.168); /* Легкий відблиск при наведенні */
+  transform: translateY(-1px); /* Легке підняття */
+}
+
+/* 3. Стиль для АКТИВНОЇ сторінки */
+.navbar-nav .nav-link.active {
+  color: #1e3a5f !important;
+  font-weight: 800 !important;
+  background-color: #d5dee8 !important; /* Робимо фон пріоритетним */
+  border-radius: 8px;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+/* Повертаємо фірмовий фон хедера */
+.custom-header-bg {
+  background-color: #DCF5FF; /* Заміни на точний код фону з твоєї Figma, якщо він відрізняється */
 }

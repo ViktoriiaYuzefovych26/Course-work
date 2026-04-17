@@ -1,47 +1,111 @@
-<div class="container py-4 sorting-page">
-  <div class="row g-4">
-    <div class="col-12 col-lg-6">
-      <div class="card h-100 shadow-sm border-0 rounded-3 p-3 glass-card">
-        <h3 class="mb-4 text-center">ВХІДНИЙ ПОТЯГ</h3>
-        <p class="text-muted text-center">Всього вагонів: <span class="fw-bold">15</span></p>
-        
-        <div class="d-flex justify-content-center gap-2 mb-4">
-          <button class="btn btn-outline-primary btn-sm rounded-pill px-3">Завантажити з файлу</button>
-          <button class="btn btn-primary btn-sm rounded-pill px-3">➕ Додати вагон вручну</button>
-        </div>
-
-        <div class="track-container mb-4">
-          <div class="track-label text-muted small mb-1">Вхідна черга (max 10)</div>
-          <div class="track-line d-flex justify-content-end align-items-center bg-light rounded-pill" style="position: relative; height: 10px;">
-            <div class="wagon bg-warning p-2 text-center text-white small" style="width: 40px; height: 30px; border-radius: 5px; position: absolute; right: 0;">#1</div>
-            <div class="wagon bg-warning p-2 text-center text-white small" style="width: 40px; height: 30px; border-radius: 5px; position: absolute; right: 50px;">#2</div>
+<div class="container-fluid py-4 sorting-page min-vh-100">
+  
+  <div class="partial-track-background" style="background-image: url('assets/rails.png');"></div>
+  <div class="partial-train-background" style="background-image: url('assets/Train-paint.png');"></div>
+  <div class="container">
+    <div class="row g-4 content-row">
+      
+      <div class="col-12 col-lg-6">
+        <div class="card h-100 shadow-sm border-0 rounded-3 p-3 glass-card">
+          <h3 class="mb-4 text-center">ВХІДНИЙ ПОТЯГ</h3>
+          <p class="text-muted text-center">Всього вагонів у черзі: <span class="fw-bold">{{ incomingTrain.length }}</span></p>
+          
+          <div class="d-flex justify-content-center gap-2 mb-4">
+              <button class="btn btn-outline-primary" (click)="loadFromFile()">Завантажити з файлу</button>
+              <button class="btn btn-primary" (click)="addWagon()">➕ Додати вагон вручну</button>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="col-12 col-lg-6">
-      <div class="card h-100 shadow-sm border-0 rounded-3 p-3 glass-card">
-        <h3 class="mb-4 text-center">СОРТУВАЛЬНИЙ ВУЗОЛ</h3>
-        <div class="mb-4 p-3 rounded text-center fw-bold" style="background-color: #ffca28;">
-          Вхідна колія #1
-        </div>
-
-        <div class="d-flex justify-content-center gap-2 mb-4">
-          <button class="btn btn-secondary btn-sm rounded-pill px-3">⚙️ Налаштувати</button>
-          <button class="btn btn-success btn-sm rounded-pill px-3">⚙️ Почати сортування</button>
-        </div>
-
-        <div class="row g-3">
-          <div class="col-12 col-md-6 mb-3">
-            <div class="p-2 border rounded bg-light track-container shadow-sm">
-              <h6 class="track-label text-muted small">Колія 1 (Львів)</h6>
-              <div class="wagon bg-info p-2 text-center text-white small rounded-3 d-inline-block me-1">#1</div>
-              <div class="wagon bg-info p-2 text-center text-white small rounded-3 d-inline-block">#4</div>
+          <div class="track-container mb-4">
+            <div class="track-label text-muted small mb-1">Вхідна черга</div>
+            
+            <div class="d-flex flex-wrap gap-2 mt-3 mb-3">
+              @for (wagon of incomingTrain; track $index) {
+                  <div class="wagon p-2 bg-warning rounded-3 fw-bold border border-secondary shadow-sm text-center" style="min-width: 50px;">
+                  {{ wagon.number }}
+                  </div>
+              } @empty {
+                  <span class="text-muted">Черга порожня.</span>
+              }
             </div>
+            
+            <div class="track-line d-flex justify-content-end align-items-center bg-light rounded-pill" style="height: 10px;"></div>
           </div>
-          </div>
+        </div>
       </div>
+
+      <div class="col-12 col-lg-6">
+        <div class="card h-100 shadow-sm border-0 rounded-3 p-3 bg-white">
+          <h3 class="mb-4 text-center">СОРТУВАЛЬНИЙ ВУЗОЛ</h3>
+          <div class="mb-4 p-3 rounded text-center fw-bold" style="background-color: #ffca28;">
+            Вхідна колія #1
+          </div>
+
+          <div class="d-flex justify-content-center gap-2 mb-4">
+              <button class="btn btn-secondary btn-sm rounded-pill px-3" (click)="openSettings()">⚙️ Налаштувати</button>
+              <button class="btn btn-success" (click)="startSorting()" [disabled]="sortingInProgress">⚙️ Почати сортування</button>
+          </div>
+
+          <div class="row g-3">
+            @for (track of tracks; track track.id) {
+              <div class="col-12 col-md-6 mb-3">
+                <div class="p-2 border rounded bg-light track-container shadow-sm" style="min-height: 80px;">
+                  <h6 class="track-label text-muted small">{{ track.name }}</h6>
+                  
+                  @for (wagon of track.wagons; track $index){
+                    <div class="wagon bg-info p-2 text-center text-white small rounded-3 d-inline-block me-1 mb-1 shadow-sm" style="min-width: 40px;">
+                      {{ wagon.number }}
+                    </div>
+                  } @empty {
+                    <span class="text-muted small">Очікує вагони...</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+        </div>
+      </div>
+      
     </div>
   </div>
 </div>
+
+@if (isSettingsOpen) {
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0 rounded-4">
+        
+        <div class="modal-header bg-light rounded-top-4">
+          <h5 class="modal-title fw-bold">⚙️ Налаштування маршрутів</h5>
+          <button type="button" class="btn-close" (click)="closeSettings()"></button>
+        </div>
+        
+        <div class="modal-body p-4">
+          <p class="text-muted small mb-3">Додайте або видаліть колії та вкажіть міста призначення:</p>
+          
+          <div class="d-flex flex-column gap-2 mb-4">
+            @for (track of tempTracks; track track.id; let i = $index) {
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary fw-bold" style="width: 25px;">#{{ i + 1 }}</span>
+                <input type="text" class="form-control" [(ngModel)]="track.name" placeholder="Назва колії (напр. Харків)">
+                <button class="btn btn-outline-danger" (click)="removeTrack(i)" title="Видалити колію">✖</button>
+              </div>
+            } @empty {
+              <div class="alert alert-warning py-2 small">У вас не залишилось жодної колії!</div>
+            }
+          </div>
+
+          <button class="btn btn-outline-primary w-100 border-dashed" (click)="addNewTrack()">
+            ➕ Додати новий напрямок
+          </button>
+        </div>
+        
+        <div class="modal-footer bg-light rounded-bottom-4">
+          <button type="button" class="btn btn-secondary" (click)="closeSettings()">Скасувати</button>
+          <button type="button" class="btn btn-success px-4" (click)="saveSettings()">Зберегти</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}

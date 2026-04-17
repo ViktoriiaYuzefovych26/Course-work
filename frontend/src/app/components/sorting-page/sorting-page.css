@@ -1,21 +1,97 @@
-/* "Скляний" ефект для карток (з твого дизайну) */
+/* --- ГЛОБАЛЬНИЙ ФОН СТОРІНКИ --- */
+.sorting-page {
+  background-color: #ffffff; /* Повністю білий фон */
+  position: relative;
+  overflow: hidden; /* Ховаємо те, що вилазить за краї (щоб рейки не робили скрол) */
+}
+
+/* --- ЧАСТКОВИЙ ФОН (РЕЙКИ) --- */
+.partial-track-background {
+  position: absolute;
+  bottom: 300px; 
+  left: -20px; 
+  
+  width: 350px;  
+  height: 350px; 
+  
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 0;   
+}
+
+/* Піднімаємо самі картки над рейками */
+.content-row {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- КАРТКИ --- */
+
+/* "Скляний" ефект для лівої картки з легким голубим відтінком */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2) !important; 
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 8px 32px 0 lab(21.68% 32.52 -54.64 / 0.05) !important;
 }
 
-/* Стилізація колії */
+/* Права картка примусово біла */
+.bg-white {
+  background: rgba(255, 255, 255, 0.2) !important; 
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 8px 32px 0 lab(21.68% 32.52 -54.64 / 0.05) !important;
+}
+
+/* --- ДЕТАЛІ ІНТЕРФЕЙСУ --- */
+
 .track-line {
-  height: 10px;
-  background: repeating-linear-gradient(90deg, #ccc, #ccc 10px, #fff 10px, #fff 20px);
+  height: 12px !important;
+  background: repeating-linear-gradient(90deg, #9e9e9e, #9e9e9e 10px, #e0e0e0 10px, #e0e0e0 20px) !important;
+  border-radius: 4px;
 }
 
-/* Стилізація вагона */
 .wagon {
-  width: 40px;
+  width: 45px;
   height: 30px;
-  border-radius: 5px;
-  font-size: 12px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border: none;
+}
+.btn-warning {
+  background-color: #ffca28;
+  border: none;
+  font-weight: 600;
+}
+.partial-train-background {
+  position: absolute;
+  
+  /* Підняття потяга від нижнього краю. 
+     Можеш зробити таке ж, як у рейок, або підняти вище/нижче */
+  bottom: 40px; 
+  
+  /* ПРИТИСКАЄМО ДО ПРАВОГО КРАЮ */
+  right: -20px; 
+  
+  /* Розміри. Потяг більш витягнутий, тому ширину можна зробити більшою, 
+     а висоту меншою, щоб зберегти пропорції малюнка */
+  width: 500px;  
+  height: 350px; 
+  
+  background-size: contain;
+  background-repeat: no-repeat;
+  /* Важливо: вирівнюємо картинку по правому нижньому краю її власного блоку */
+  background-position: bottom right; 
+  
+  z-index: 0; 
 }
