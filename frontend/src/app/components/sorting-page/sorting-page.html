@@ -12,10 +12,31 @@
 
           <div class="mb-4 p-3 rounded-4 shadow-sm text-white animate__animated animate__fadeIn" 
               style="background: linear-gradient(135deg, #1e3a5f 0%, #2a5298 100%);">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="small opacity-75 fw-bold text-uppercase">Поточний маршрут:</span>
-              <span class="badge bg-warning text-dark">Вагонів у черзі: {{ incomingTrain.length }}</span>
-            </div>
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-light border-opacity-25">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="small opacity-75 fw-bold text-uppercase" style="letter-spacing: 1px;">Потяг №</span>
+                  <input type="text" 
+                        [(ngModel)]="trainNumber" 
+                        class="form-control form-control-sm bg-transparent text-white border-0 border-bottom rounded-0 p-0 fw-bold text-center" 
+                        placeholder="142" 
+                        style="width: 50px; font-size: 1.1rem; outline: none; box-shadow: none;">
+                </div>
+                
+                <div class="d-flex align-items-center gap-2">
+                  <i class="bi bi-calendar3 text-white opacity-75"></i>
+                  <input type="date" 
+                        [(ngModel)]="trainDate" 
+                        class="form-control form-control-sm bg-transparent text-white border-0 border-bottom rounded-0 p-0 fw-bold" 
+                        style="outline: none; box-shadow: none; color-scheme: dark;">
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small opacity-75 fw-bold text-uppercase">Поточний маршрут:</span>
+                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">
+                  Вагонів: {{ incomingTrain.length }}
+                </span>
+              </div>
             <div class="d-flex align-items-center gap-3">
               
               <input type="text" 
@@ -39,9 +60,17 @@
           </div>
 
           <div class="bg-white p-3 rounded-4 border mb-4 shadow-sm">
+            
+            <div class="alert alert-warning py-2 px-3 small fw-bold d-flex align-items-center mb-3 border-0 rounded-3" 
+                 style="background-color: rgba(255, 193, 7, 0.15); color: #856404;">
+              <i class="bi bi-info-circle-fill me-2 text-warning"></i>
+              Перед додаванням вагонів вкажіть місто та № потяга вище!
+            </div>
+
             <div class="d-flex gap-2 mb-3">
               <input type="file" id="fileInput" (change)="onFileSelected($event)" accept=".json,.csv,.txt" style="display: none;">
-              <button class="btn btn-outline-primary w-50 d-flex align-items-center justify-content-center gap-2" (click)="triggerFileInput()">
+              <button class="btn btn-outline-primary w-50 d-flex align-items-center justify-content-center gap-2" 
+                      (click)="triggerFileInput()">
                 <span>📂</span> JSON / CSV
               </button>
               <button class="btn btn-primary w-50 d-flex align-items-center justify-content-center gap-2" 
@@ -50,6 +79,7 @@
                 <span>➕</span> Додати вагон
               </button>
             </div>
+            
             @if (importStatus) {
               <div class="animate__animated animate__fadeInDown text-center small fw-bold mb-3" 
                   [style.color]="importStatus.includes('✅') ? '#28a745' : '#dc3545'">
@@ -63,7 +93,9 @@
                 <input type="text" 
                       class="form-control form-control-sm" 
                       [class.is-invalid]="newWagonNumber.length > 0 && !isCurrentNumberValid()"
-                      [(ngModel)]="newWagonNumber" (input)="onNumberChange()" 
+                      [(ngModel)]="newWagonNumber" 
+                      (input)="onNumberChange()" 
+                      (focus)="checkSetup($event)"
                       placeholder="8 цифр" maxlength="8" onkeypress="return /[0-9]/.test(event.key)">
                 
                 <div class="invalid-feedback fw-bold" style="font-size: 9px;">⚠️ Немає колії для цієї цифри!</div>
@@ -77,7 +109,9 @@
 
               <div class="col-4">
                 <label class="small text-muted mb-1">Тип вагона</label>
-                <select class="form-select form-select-sm" [(ngModel)]="newWagonType">
+                <select class="form-select form-select-sm" 
+                        [(ngModel)]="newWagonType" 
+                        (mousedown)="checkSetup($event)">
                   @for (t of getAvailableTypes(); track t.id) {
                     <option [value]="t.id">{{t.name}}</option>
                   }
@@ -87,7 +121,9 @@
               <div class="col-4">
                 @if (getPossibleDestinations().length > 1) {
                   <label class="small text-danger mb-1 fw-bold">📍 Оберіть місто</label>
-                  <select class="form-select form-select-sm border-danger" [(ngModel)]="newWagonDestination">
+                  <select class="form-select form-select-sm border-danger" 
+                          [(ngModel)]="newWagonDestination"
+                          (mousedown)="checkSetup($event)">
                     <option value="" disabled selected>Куди?</option>
                     @for (city of getPossibleDestinations(); track city) {
                       <option [value]="city">{{city}}</option>
@@ -110,22 +146,33 @@
             <div class="track-label text-muted small mb-2">Вхідна колія (Склад потяга)</div>
             <div class="d-flex flex-wrap gap-2">
             @for (wagon of incomingTrain; track $index) {
-              <div class="wagon-box p-2 rounded-3 fw-bold border border-secondary shadow-sm text-center animate__animated animate__fadeInLeft" 
-                  (click)="!wagon.destination ? selectDestinationForWagon($index) : null"
-                  [class.bg-warning]="wagon.destination"
-                  [class.bg-danger]="!wagon.destination"
-                  [class.text-white]="!wagon.destination"
-                  [style.cursor]="!wagon.destination ? 'pointer' : 'default'"
-                  style="min-width: 65px; font-size: 12px;" 
-                  [title]="wagon.destination || 'Натисніть, щоб обрати місто'">
-                {{ wagon.number }}
-                @if (!wagon.destination) { 
-                  <div style="font-size: 8px;">❓ КУДИ?</div> 
-                }
-              </div>
-            } @empty {
-              <div class="w-100 text-center py-4 text-muted italic small">Черга порожня.</div>
-            }
+              <div class="wagon-box p-2 rounded-3 fw-bold border border-secondary shadow-sm text-center animate__animated animate__fadeInLeft position-relative" 
+                    (click)="!wagon.destination ? selectDestinationForWagon($index) : null"
+                    [class.bg-warning]="wagon.destination"
+                    [class.bg-danger]="!wagon.destination"
+                    [class.text-white]="!wagon.destination"
+                    [style.cursor]="!wagon.destination ? 'pointer' : 'default'"
+                    style="min-width: 75px; font-size: 12px; padding-right: 18px !important;" 
+                    [title]="wagon.destination || 'Натисніть, щоб обрати місто'">
+                  
+                  {{ wagon.number }}
+                  
+                  <button 
+                    type="button" 
+                    class="btn-close position-absolute top-0 end-0 mt-1 me-1" 
+                    style="font-size: 0.45rem; opacity: 0.8;" 
+                    (click)="removeWagon($index); $event.stopPropagation()"
+                    aria-label="Видалити">
+                  </button>
+
+                  @if (!wagon.destination) { 
+                    <div style="font-size: 8px;">❓ КУДИ?</div> 
+                  }
+                </div>
+
+              } @empty {
+                <div class="w-100 text-center py-4 text-muted italic small">Черга порожня.</div>
+              }
           </div>
           </div>
         </div>
@@ -137,7 +184,11 @@
           
           <div class="d-flex justify-content-center gap-2 mb-4">
             <button class="btn btn-secondary btn-sm rounded-pill px-3" (click)="openSettings()">⚙️ Налаштування</button>
-            <button class="btn btn-success fw-bold px-4" (click)="startSorting()"[disabled]="sortingInProgress || incomingTrain.length === 0">🚀 Почати сортування</button>
+            <button class="btn btn-success fw-bold px-4" 
+                    (click)="startSorting()"
+                    [disabled]="sortingInProgress || incomingTrain.length === 0 || !isSetupComplete">
+              🚀 Почати сортування
+            </button>
           </div>
 
           @if (isSortingFinished) {
@@ -152,42 +203,111 @@
           }
 
           @if (showReportForm) {
-            <div class="card border-0 shadow-sm rounded-4 p-3 mt-2 bg-light">
-              <h6 class="fw-bold mb-3 border-bottom pb-2">📋 Оформлення звіту</h6>
-              <div class="row g-2">
-                <div class="col-12"><input type="text" class="form-control form-control-sm" [(ngModel)]="reportData.dispatcherName" placeholder="Диспетчер"></div>
-                <div class="col-6"><input type="text" class="form-control form-control-sm" [(ngModel)]="reportData.shiftNumber" placeholder="Зміна"></div>
-                <div class="col-6"><input type="text" class="form-control form-control-sm" [(ngModel)]="reportData.stationMaster" placeholder="Черговий"></div>
-                <div class="col-12"><button class="btn btn-primary w-100 fw-bold mt-1" (click)="generateReport()">📥 Сформувати файл</button></div>
+            <div class="card border-0 shadow mt-3 rounded-4 overflow-hidden animate__animated animate__fadeInUp mb-4">
+              <div class="card-header text-white p-3 border-0" style="background: linear-gradient(135deg, #1e3a5f 0%, #2a5298 100%);">
+                <h6 class="fw-bold mb-0">📋 Оформлення підсумкового звіту</h6>
+              </div>
+              
+              <div class="card-body p-4 bg-light border border-top-0 rounded-bottom-4">
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <label class="small fw-bold text-muted mb-1">Головний диспетчер</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-secondary">👩‍💻</span>
+                      <input type="text" class="form-control border-secondary fw-bold" 
+                             [(ngModel)]="reportData.dispatcherName" 
+                             placeholder="ПІБ диспетчера">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <label class="small fw-bold text-muted mb-1">Номер зміни</label>
+                    <input type="text" class="form-control border-secondary" 
+                           [(ngModel)]="reportData.shiftNumber" 
+                           placeholder="Напр. Зміна №3">
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <label class="small fw-bold text-muted mb-1">Черговий по станції</label>
+                    <input type="text" class="form-control border-secondary" 
+                           [(ngModel)]="reportData.stationMaster" 
+                           placeholder="ПІБ чергового">
+                  </div>
+
+                  <div class="col-12">
+                    <label class="small fw-bold text-muted mb-1">Додаткові примітки (необов'язково)</label>
+                    <textarea class="form-control border-secondary" rows="2" 
+                              [(ngModel)]="reportData.notes" 
+                              placeholder="Особливі відмітки про процес сортування, пошкодження тощо..."></textarea>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-top d-flex justify-content-end gap-2">
+                  <button class="btn btn-outline-secondary px-4 rounded-3" (click)="onDeclineReport()">Скасувати</button>
+                  <button class="btn btn-primary px-4 fw-bold rounded-3 d-flex align-items-center gap-2" (click)="generateReport()">
+                    📥 Завантажити .TXT
+                  </button>
+                </div>
               </div>
             </div>
           }
 
-          <div class="row g-3 mt-1">
-            @for (track of tracks; track track.id) {
-              <div class="col-12 col-md-6">
-                <div class="p-3 border rounded-3 bg-white shadow-sm" style="min-height: 120px; border-left: 5px solid #1e3a5f !important;">
-                  <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
-                    <div>
-                      <h6 class="fw-bold mb-0" style="color: #1e3a5f;">{{ track.name }}</h6>
-                      <span class="badge bg-light text-secondary border" style="font-size: 9px;">{{ getTypeName(track.allowedType) }}</span>
-                    </div>
-                    <span class="badge bg-primary rounded-pill">{{ track.wagons.length }}</span>
-                  </div>
-                  <div class="d-flex flex-wrap gap-1">
-                    @for (wagon of track.wagons; track $index){
-                      <div class="wagon-item bg-info text-white fw-bold d-flex align-items-center justify-content-center" 
-                           style="width: 65px; height: 30px; border-radius: 4px; font-size: 10px;">
-                        {{ wagon.number }}
+          @if (!isSetupComplete) {
+            <div class="text-center p-5 bg-light rounded-4 border mt-2" style="border-style: dashed !important; border-width: 2px !important; border-color: #dee2e6 !important;">
+              <div class="mb-3">
+                <span style="font-size: 3rem; filter: grayscale(100%); opacity: 0.5;">🛠️</span>
+              </div>
+              <h5 class="fw-bold text-secondary mb-2">Маршрути не налаштовано</h5>
+              <p class="text-muted small mb-0">
+                Для початку роботи натисніть кнопку <b>«⚙️ Налаштування»</b> вище та вкажіть місто відправлення.
+              </p>
+            </div>
+          } 
+          @else {
+            <div class="row g-3 mt-1">
+              @for (track of tracks; track track.id) {
+                <div class="col-12 col-md-6">
+                  <div class="p-3 border rounded-3 bg-white shadow-sm" style="min-height: 120px; border-left: 5px solid #1e3a5f !important;">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                      <div>
+                        <h6 class="fw-bold mb-0" style="color: #1e3a5f;">{{ track.name }}</h6>
+                        <span class="badge bg-light text-secondary border" style="font-size: 9px;">{{ getTypeName(track.allowedType) }}</span>
                       </div>
-                    } @empty {
-                      <span class="text-muted small fst-italic">Вільна...</span>
+                      <span class="badge bg-primary rounded-pill">{{ track.wagons.length }}</span>
+                    </div>
+
+                    @if (track.trainNumber || track.trainDate) {
+                      <div class="d-flex flex-wrap align-items-center gap-1 mb-2 mt-1">
+                        @if (track.trainNumber) {
+                          <span class="badge bg-secondary text-white" style="font-size: 0.7rem;">
+                            🚆 Потяг №{{ track.trainNumber }}
+                          </span>
+                        }
+                        @if (track.trainDate) {
+                          <span class="badge border border-secondary text-secondary" style="font-size: 0.7rem;">
+                            📅 {{ track.trainDate | date:'dd.MM.yyyy' }}
+                          </span>
+                        }
+                      </div>
                     }
+
+                    <div class="d-flex flex-wrap gap-1">
+                      @for (wagon of track.wagons; track $index){
+                        <div class="wagon-item bg-info text-white fw-bold d-flex align-items-center justify-content-center" 
+                             style="width: 65px; height: 30px; border-radius: 4px; font-size: 10px;">
+                          {{ wagon.number }}
+                        </div>
+                      } @empty {
+                        <span class="text-muted small fst-italic">Вільна...</span>
+                      }
+                    </div>
                   </div>
                 </div>
-              </div>
-            }
-          </div>
+              }
+            </div>
+          }
+
         </div>
       </div>
       
@@ -215,37 +335,73 @@
             </div>
           </div>
 
-          <label class="small fw-bold text-muted text-uppercase mb-2 d-block">Колії призначення (куди)</label>
+          <label class="small fw-bold text-muted text-uppercase mb-2 d-block">Колії призначення та рейси</label>
           
           <div class="d-flex flex-column gap-2">
             @for (track of tempTracks; track track.id; let i = $index) {
-              <div class="d-flex gap-2 align-items-center p-2 border rounded-3 bg-white shadow-sm">
-                <input type="text" class="form-control form-control-sm border-0" 
-                       [(ngModel)]="track.name" placeholder="Місто прибуття">
+              <div class="p-3 border rounded-4 bg-white shadow-sm position-relative">
                 
-                <select class="form-select form-select-sm border-0 bg-light" style="width: 140px;" [(ngModel)]="track.allowedType">
-                  @for (type of wagonTypes; track type.id) {
-                    <option [value]="type.id">{{ type.name }}</option>
-                  }
-                </select>
-                
-                <button class="btn btn-link text-danger p-0 px-2" (click)="removeTrack(i)" [disabled]="tempTracks.length <= 2">
+                <button class="btn btn-link text-danger p-0 position-absolute top-0 end-0 mt-2 me-2" 
+                        (click)="removeTrack(i)" 
+                        [disabled]="tempTracks.length <= 2"
+                        title="Видалити колію">
                   ✖
                 </button>
+
+                <div class="row g-2 mb-2 pe-3">
+                  <div class="col-7">
+                    <input type="text" class="form-control form-control-sm border-secondary" 
+                           [(ngModel)]="track.name" placeholder="Місто прибуття">
+                  </div>
+                  <div class="col-5">
+                    <select class="form-select form-select-sm border-secondary bg-light" [(ngModel)]="track.allowedType">
+                      @for (type of wagonTypes; track type.id) {
+                        <option [value]="type.id">{{ type.name }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row g-2">
+                  <div class="col-6">
+                    <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light text-muted border-secondary" style="font-size: 0.75rem;">№ потяга</span>
+                    <input type="text" 
+                          class="form-control border-secondary fw-bold text-uppercase" 
+                          [(ngModel)]="track.trainNumber" 
+                          (input)="track.trainNumber = track.trainNumber?.toUpperCase()?.trim()"
+                          maxlength="5" 
+                          placeholder="142К">
+                  </div>
+                  </div>
+                  <div class="col-6">
+                    <input type="date" class="form-control form-control-sm border-secondary text-secondary" 
+                           [(ngModel)]="track.trainDate">
+                  </div>
+                </div>
+
               </div>
             }
           </div>
 
-          <button class="btn btn-outline-primary w-100 mt-3 btn-sm border-dashed" (click)="addNewTrack()" [disabled]="tempTracks.length >= 5">
+          <button class="btn btn-outline-primary w-100 mt-3 btn-sm border-dashed rounded-3" 
+                  (click)="addNewTrack()" 
+                  [disabled]="tempTracks.length >= 5">
             ➕ Додати нову колію
           </button>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary px-4" (click)="closeSettings()">Скасувати</button>
-          <button type="button" class="btn btn-success px-4 fw-bold" (click)="saveSettings()">Зберегти зміни</button>
+          <button type="button" class="btn btn-secondary px-4 rounded-3" (click)="closeSettings()">Скасувати</button>
+          <button type="button" class="btn btn-success px-4 fw-bold rounded-3" (click)="saveSettings()">Зберегти зміни</button>
         </div>
       </div>
     </div>
   </div>
 }
+<div *ngIf="showError" class="glass-alert" (click)="showError = false" style="cursor: pointer;" title="Натисніть, щоб закрити">
+  <div class="d-flex align-items-center">
+    <i class="bi bi-exclamation-triangle-fill me-2" style="color: #ff4d4d;"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+</div>

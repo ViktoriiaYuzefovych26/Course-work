@@ -78,3 +78,37 @@
     background-color: #cbd5e1;
     width: 1px;
 }
+/* Робимо прокрутку плавною та гарною */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Для плавної прокрутки на iPhone */
+}
+
+/* Встановлюємо поріг, після якого з'являється скрол */
+.table {
+  min-width: 1000px; /* Підбери це число, щоб усі твої колонки влізли без переносів */
+}
+
+/* Стилізуємо сам скролбар, щоб він не був "дубовим" */
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Щоб текст у колонках не розривався на два рядки */
+th, td {
+  white-space: nowrap;
+}

@@ -1,6 +1,8 @@
 <div class="reports-container min-vh-100 py-4">
   <div class="container">
-    
+
+    <input type="text" style="position: absolute; top: -1000px;">
+    <input type="password" style="position: absolute; top: -1000px;">
     <div class="row align-items-center mb-5 py-2">
       <div class="col-lg-6 animate__animated animate__fadeInLeft">
         <h1 class="display-4 fw-bold text-dark mb-3">Архів звітів</h1>
@@ -8,15 +10,38 @@
           Історія сортувальних робіт станції. Переглядайте деталі кожного рейсу та експортуйте документацію в один клік.
         </p>
         
-        <div class="d-flex gap-3 mb-4 p-2 custom-filter-box rounded-4 border">
-          <div class="flex-grow-1">
-            <label class="small text-muted fw-bold d-block mb-1 ps-2">📅 Дата</label>
-            <input type="date" class="form-control border-0 bg-transparent shadow-none" [(ngModel)]="filterDate">
-          </div>
-          <div class="vr mx-1 my-2"></div>
-          <div class="flex-grow-1">
-            <label class="small text-muted fw-bold d-block mb-1 ps-2">🔍 Диспетчер</label>
-            <input type="text" class="form-control border-0 bg-transparent shadow-none" placeholder="Прізвище..." [(ngModel)]="searchQuery">
+        <div class="custom-filter-panel p-3 rounded-4 border bg-white shadow-sm mb-4">
+          <div class="row g-3">
+            <div class="col-md-3">
+      <label class="small text-muted fw-bold d-block mb-1 ps-2">📅 Дата</label>
+      <input type="date" 
+             class="form-control border-0 bg-light rounded-3" 
+             [(ngModel)]="filterDate"
+             autocomplete="off"> </div>
+
+    <div class="col-md-4">
+      <label class="small text-muted fw-bold d-block mb-1 ps-2">🔍 Пошук</label>
+      <input type="text" 
+             class="form-control border-0 bg-light rounded-3" 
+             placeholder="Диспетчер або №..." 
+             [(ngModel)]="searchQuery"
+             autocomplete="off"> </div>
+
+            <div class="col-md-3">
+              <label class="small text-muted fw-bold d-block mb-1 ps-2">📦 Тип вагона</label>
+              <select class="form-select border-0 bg-light rounded-3" [(ngModel)]="selectedWagonType">
+                <option *ngFor="let type of wagonTypes" [value]="type">{{ type }}</option>
+              </select>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end gap-2">
+              <button class="btn btn-light w-100 rounded-3 border" (click)="toggleTimeSort()" [title]="sortDirection === 'asc' ? 'Від старих до нових' : 'Від нових до старих'">
+                {{ sortDirection === 'asc' ? '⏳⬆️' : '⏳⬇️' }}
+              </button>
+              <button class="btn btn-light w-100 rounded-3 border" (click)="toggleNameSort()" title="Сортувати за прізвищем">
+                {{ nameSortDirection === 'asc' ? '🔤 А-Я' : (nameSortDirection === 'desc' ? '🔤 Я-А' : '👤') }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -49,7 +74,7 @@
         <div class="card border-0 shadow-sm rounded-4 p-4 text-center h-100 stat-card transparent-card">
           <div class="display-6 mb-2">⏱️</div>
           <h5 class="fw-bold text-muted small text-uppercase">Остання активність</h5>
-          <p class="h4 mt-2 fw-bold text-dark">{{ reports.length > 0 ? (reports[0].reportDate | date:'dd.MM') : '---' }}</p>
+          <p class="h4 mt-2 fw-bold text-dark">{{ reports.length > 0 ? (reports[0].createdAt | date:'dd.MM') : '---' }}</p>
         </div>
       </div>
     </div>
@@ -65,31 +90,61 @@
         <table class="table table-hover align-middle mb-0">
           <thead class="text-muted small text-uppercase">
             <tr class="bg-light-subtle">
-              <th class="ps-4">Час</th>
+              <th class="ps-4" style="width: 50px;">#</th> 
+              <th style="width: 120px;">Час формування</th>
               <th>Маршрут</th>
-              <th>Тип</th>
+              <th>Диспетчер</th>
+              <th>№ Потяга</th>
+              <th>Дата відправлення</th>
+              <th>Тип вагона</th>
               <th>К-сть</th>
               <th class="text-center pe-4">Звіт</th>
             </tr>
           </thead>
           <tbody>
-            @for (r of filteredReports; track $index) {
+            @for (r of filteredReports; track r.id; let i = $index) {
               <tr class="report-row">
-                <td class="ps-4">
-                   <div class="fw-bold text-dark">{{ r.reportDate | date:'HH:mm' }}</div>
-                   <div class="text-muted small">{{ r.reportDate | date:'dd.MM.yyyy' }}</div>
+                <td class="ps-4 text-muted fw-bold">{{ i + 1 }}</td>
+                <td>
+                  <div class="fw-bold text-dark">{{ r.createdAt | date:'HH:mm' }}</div>
+                  <div class="text-muted small">{{ r.createdAt | date:'dd.MM.yyyy' }}</div>
                 </td>
                 <td>
                   <span class="fw-bold text-primary">{{ r.departureStation }}</span> 
                   <span class="mx-2 text-muted opacity-50">➔</span> 
                   <span class="fw-bold text-dark">{{ r.destinationStation }}</span>
                 </td>
+                <td>
+                  <span class="badge bg-light text-dark border-0 shadow-sm px-2">
+                    👤 {{ r.dispatcherName }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge bg-secondary text-white">{{ r.trainNumber }}</span>
+                </td>
+                <td>
+                  <div class="fw-bold text-dark" style="font-size: 0.9rem;">
+                    {{ r.departureDate | date:'dd.MM.yyyy' }}
+                  </div>
+                </td>
                 <td><span class="badge bg-white text-dark border px-2 py-1">{{ r.wagonType }}</span></td>
                 <td><span class="fw-bold text-dark fs-5">{{ r.wagonCount }}</span></td>
                 <td class="text-center pe-4">
-                  <button class="btn btn-sm btn-outline-primary rounded-circle action-btn" (click)="downloadTxt(r)">
-                    <span>📥</span>
-                  </button>
+                  <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-sm btn-outline-primary rounded-circle action-btn" (click)="downloadTxt(r)">
+                      <span>📥</span>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger rounded-circle action-btn" (click)="deleteReport(r.id)">
+                      <span>🗑️</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="text-center py-5 text-muted">
+                  <div class="display-1 opacity-25">🔍</div>
+                  <p class="mt-3">Нічого не знайдено за вашим запитом</p>
                 </td>
               </tr>
             }
@@ -97,6 +152,5 @@
         </table>
       </div>
     </div>
-      
   </div>
 </div>

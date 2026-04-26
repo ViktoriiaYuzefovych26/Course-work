@@ -1,5 +1,9 @@
 {
+  "version": 2,
+  "public": true,
+  "name": "course-work",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  ],
+  "outputDirectory": "dist/frontend/browser"
 }

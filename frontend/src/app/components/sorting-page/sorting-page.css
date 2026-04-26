@@ -145,3 +145,36 @@
 .track-container:hover {
   transform: scale(1.02);
 }
+
+.glass-alert {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  z-index: 10000;
+  min-width: 280px;
+  padding: 15px 20px;
+  background: rgba(30, 48, 80, 0.85); 
+  backdrop-filter: blur(12px);
+  border-left: 5px solid #ff4d4d;
+  border-radius: 12px;
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  
+  /* Анімація появи за замовчуванням */
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+/* Клас, який ми додамо перед тим, як видалити блок */
+.fade-out {
+  animation: fadeOut 0.8s ease-in forwards !important;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.9); }
+}
