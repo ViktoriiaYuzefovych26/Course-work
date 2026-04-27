@@ -21,7 +21,7 @@ export interface SavedReport {
 })
 export class ReportService {
   // Адреса твого Java-контролера
-  private apiUrl = 'http://localhost:8080/api/sorting/reports';
+  private apiUrl = 'https://course-bekend.onrender.com/api/sorting/reports/all';
 
   constructor(private http: HttpClient) {}
 
