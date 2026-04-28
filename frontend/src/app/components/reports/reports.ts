@@ -148,6 +148,8 @@ get filteredReports() {
   Swal.fire({
     title: 'Підтвердження видалення',
     text: 'Введіть пароль адміністратора для видалення звіту:',
+    input: 'password',
+    inputPlaceholder: 'Введіть пароль...',
     inputAttributes: {
       autocapitalize: 'off',
       autocorrect: 'off',
